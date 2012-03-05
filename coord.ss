@@ -69,46 +69,40 @@
 ; e is the "radius" density and d the "angular" density for
 ; creating the covering . n is the number of the gen loop runs
 (define (mdisk rad e d n)
-  (let loop ((a (mvec 0 0))
-	     (res '()))
-	      (if (< (mmag a) rad)
-	       (begin 
-		(loop (mvec 0 (+ e (cadr a))) (cons a res)))
-	       (begin
-		(let ((a (reverse res))
-	     	      (i2 (mmat '(1 0) '(0 1)))
-                      (R (mmat '(0 1) '(-1 0))))
-			(let loopi ((ni 0)
-				    (b '()))
-		         (if (< ni n)
-		             (loopi (+ ni 1) (cons (map (lambda (a) (v+ (mmv i2 a)
-		       	                               		        ;(mmv (mscmul d R) a))) a) b))
-		       	                               		        (mmv (mscmul d R) a))) 
-									  (if (null? b) a 
-										        (car b))) b))
-			     b)))))))
+  (let loop ((a (mvec 0 0)) (res '()))
+    (if (< (mmag a) rad)
+      (begin (loop (mvec 0 (+ e (cadr a))) (cons a res)))
+      (begin
+        (let ((a (reverse res))
+              (i2 (mmat '(1 0) '(0 1)))
+              (R (mmat '(0 1) '(-1 0))))
+          (let loopi ((ni 0) (b '()))
+            (if (< ni n)
+              (loopi (+ ni 1)
+                     (cons (map (lambda (a) (v+ (mmv i2 a) (mmv (mscmul d R) a)))
+                                (if (null? b) a (car b)))
+                           b))
+              b)))))))
 
-(define write-list-to-file 
+
+(define write-list-to-file
   (lambda (filename ls)
-    (with-output-to-file filename
-      (lambda ()
-        (display-list ls)))))
+    (with-output-to-file filename (lambda () (display-list ls)))))
 
 ;that was hard
-(define display-list 
+(define display-list
   (lambda (ls)
     (if (null? ls)
-        (newline)
-     (begin
-       (if (not (list? (car ls)))
-	    (begin 
-	      (display (car ls))
-	      (display "\t")
-	      (display (cadr ls))
-	      (newline))
-            (begin
-              (display-list (car ls))
-              (display-list (cdr ls))))))))
+      (newline)
+      (begin
+        (if (not (list? (car ls)))
+          (begin
+            (display (car ls))
+            (display "\t")
+            (display (cadr ls))
+            (newline))
+          (begin (display-list (car ls)) (display-list (cdr ls))))))))
 
-(define yeah (mdisk 1 0.1 0.1 10))
+(define yeah (mdisk 1 0.1 0.1 80))
 (write-list-to-file "kota.dat" yeah)
+yeah
