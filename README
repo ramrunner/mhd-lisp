@@ -2,7 +2,8 @@ MHD simulation by DsP v.0.0.0.0.0.0.0.0.0.1/2-alpha
 Currently implemented algorithm :
 a) at first we create a 2d vector, we can scale it by parameter a
 b) we use it to create a set of parallel vectors with different magnitudes
-c) we rotate the whole set in order to create a disk
+c) we rotate the whole set in order to create a disk (we also can do it by rotation matrix)
+d) now we project stereographicly to create a spherical front
 
 Install: 
 get a scheme distro for your system (pref chicken scheme).
