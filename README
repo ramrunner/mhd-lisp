@@ -1,9 +1,20 @@
-MHD simulation by DsP v.0.0.0.0.0.0.0.0.0.1/2-alpha
-Currently implemented algorithm :
-a) at first we create a 2d vector, we can scale it by parameter a
-b) we use it to create a set of parallel vectors with different magnitudes
-c) we rotate the whole set in order to create a disk (we also can do it by rotation matrix)
-d) now we project stereographicly to create a spherical front
+MHD simulation by DsP v.03-alpha
+
+spherical front simulation:
+  Currently implemented algorithm :
+  a) at first we create a 2d vector, we can scale it by parameter a
+  b) we use it to create a set of parallel vectors with different magnitudes
+  c) we rotate the whole set in order to create a disk (we also can do it by rotation matrix)
+  d) now we project stereographicly to create a spherical front
+
+On the Sagdeev 1d plasma simulation technique:
+  We implement a safe Newton Raphson method to calculate the zeros of the S(phi, M) potential
+  then using a discrete scheme based on the second derivative of phi with respect to X we
+  calculate Phi as function of X
+
+  Todo:
+    Use the Phi(X) functions as initials conditions on a multigrid solver to test the stability
+    of those pulses.
 
 Install: 
 get a scheme distro for your system (pref chicken scheme).
