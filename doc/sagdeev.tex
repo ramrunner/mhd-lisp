@@ -55,7 +55,14 @@ Performing a change of variables
 \section{implementation}
 \subsection{Sagdeev pseudopotential root finding}
 We constructed a safe newton method {\tt NewtonSafe} to calculate the root of $S(\phi, M) = 0$
-for various Mach numbers.
+for various Mach numbers. This method checks for convergance of the root finding process and
+if it seems that there are chances of oscillation or divergance , it bisects the space.
+Because of the functional nature of our code we develop a function that returns the root
+(calculated by the NewtonSafe method) of the sagdeev problem in a given Mach number M
+(this function is the code is called {\tt SagdeevNewtonSafeAtM} and a caller function around it
+that is called {\tt SagdeevRootsInSpace} that takes a start, end mach number and a step and 
+symbolically calculates all roots of the sagdeev problem in all these mach numbers. The following
+table shows the mach number and the $\phi$ which is a root of the equivalent Sagdeev problem.
 
 \begin{tabular}{c | c}
 Mach & phi where S(phi, M) = 0 \\
@@ -116,9 +123,13 @@ An animation of the plot of the Sagdeev function as the Mach number changes can 
 \href{https://github.com/ramrunner/mhd-lisp/blob/master/doc/anim.gif}{my github}
 
 \subsection{numerical construction of potential and electric fields}
-We create a iterative numerical scheme to approximate $\phi$ and $E$
+We create a iterative numerical scheme to approximate $\phi$ and $E$. In the code this 
+function is named {\tt termsphiOfX} and it uses a hashtable to avoid recalculating known points
+as it recursively approaches the 0 value.
 \begin{figure}
 \includegraphics{phiofxvarm.png}
 \end{figure}
+
+\section{numerical evolution of the pulses}
 
 \end{document}
