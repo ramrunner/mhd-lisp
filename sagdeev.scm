@@ -148,6 +148,17 @@
 		(if (> start end) '()
 		    (cons start (genlist (round-off (+ start step) (number-of-digits step)) end step)))))
 
+(define genpoints
+        (lambda (start end amount)
+                (letrec* ((dx (/ (- end start) amount))
+                          (numdigits (number-of-digits dx))
+                          (loop (lambda (s e) (if (> s e) '() (cons s (loop (round-off ( + s dx) numdigits) e))))))
+                  (if (> start end)
+                      '()
+                      (loop start end)))))
+                      
+                    
+
 (define linspace1 (genlist 0 1 0.0001))
 
 (define res1 (map (lambda (s) (cons s (sagdeev s 1.5))) linspace1))
