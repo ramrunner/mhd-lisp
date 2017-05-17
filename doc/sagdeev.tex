@@ -1,14 +1,25 @@
-\documentclass{report}
+\documentclass{article}
+\usepackage{fullpage}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \newcommand{\bmathc}{\begin{center}\begin{math}}
 \newcommand{\emathc}{\end{math}\end{center}}
-\author{dsp@2f30.org}
-\title{1D plasma simulation using the sagdeev pseudopotential approach}
 \begin{document}
+\title{Fluid propagation of electrostatic collisionless shocks and solitary waves modelled via fluid simulations based on pseudopotential (Sagdeev) approach}
+\author{Spiros Thanasoulas 40075704}
 \maketitle
-\section{Theory}
+\section{Sagdeev pseudo-potential theory}
+The Sagdeev theory is an arbitrary amplitude non-perturbative
+non-linear methodology. With it one can study nonlinear 
+plasma dynamics for the purpose of looking for solitons and 
+their dynamics in plasmas. These localized and stable waves
+have been experimentally observed and appear both in atmospheric and laboratory plasmas.
+Our goal in this study is to use the sagdeev theory to symbolically create initial conditions
+for our fluid system that could be waves of interest propagating in the plasm that our system
+describes. Then we will use a optimized numerical solver to evolve these systems and see which ones
+are firstly able to be evolved and then which ones involve interesting nonlinear phenomena.
+
 \subsection{Model}
 We wish to study the propagation of ion acoustic waves propagating in an ion-electron plasma.
 Starting from the continuity equation
@@ -45,14 +56,57 @@ Finally we move to our dimensionless set of equations
 \end{aligned}
 \end{equation}
 
-\subsection{Sagdeev pseudopotential}
-We will consider propagating excitations that retain their shape if we follow them in a moving frame.
-Performing a change of variables 
-\bmathc
+\subsection{sagdeev theory}
+Now if we  consider propagating excitations that retain their shape if we follow them in a moving frame
+we can perform a change of variables to satisfy that. 
+\begin{equation} \label{sagdeev:changevars}
 	X = x - M t
-\emathc
+\end{equation}
 
-\section{implementation}
+Incorporating this change of variables to our dimensionless fluid model we get the system
+\begin{equation} \label{sagdeev:systemWithM}
+\begin{aligned}
+	-M \frac{\partial n}{\partial X} + \frac{\partial (nv)}{\partial X} = 0 \\
+	-M \frac{\partial v}{\partial X} + v \frac{\partial(v)}{\partial X} = - \frac{\partial \phi}{\partial X} \\
+	 \frac{\partial^2 \phi}{\partial X^2} = e^{\phi} - n \\
+\end{aligned}
+\end{equation}
+Integrating those equations and considering conditions at 
+infinity: $n=1,v=0,\phi=0$ the continuity equation becomes:
+\begin{equation} \label{sagdeev:continuityWithM}
+	v = M(1-\frac{1}{n}
+\end{equation}
+and integrating the momentum equation:
+\begin{equation} \label{sagdeev:momentumWithM}
+	v = M - \sqrt{M^2 - 2\phi}
+\end{equation}
+which asserts that the potential $\phi < M^2/2 $ to obtain a
+real value for $v$.
+For the density equation we have:
+\begin{equation} \label{sagdeev:densityWithM}
+	n = \frac{1}{\sqrt{1-2\phi/M^2}}
+\end{equation}
+and finally for the Poisson equation in relation to the mach number M
+\begin{equation}
+	\frac{\partial^2 \phi}{\partial X^2} = e^\phi - \frac{1}{\sqrt{1 - 2\phi / M^2}}
+\end{equation}
+We proceed by multiplying both sides by $\frac{d \phi}{dX}$ and integrating we obtain:
+\begin{equation}
+	\frac{1}{2}\left(\frac{d \phi}{d X} \right)^2 + S(\phi,M) = 0
+\end{equation}
+so the Sagdeev potential is
+\begin{equation}
+ S(\phi,M) = 1 - e^\phi + M^2\left( 1 - \sqrt{1-\frac{2 \phi}{M^2}} \right) 
+\end{equation}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.7]{phi.png}
+\end{center}
+\caption{the Sagdeev potential for a given M in relation to $\phi$}
+\end{figure}
+
+\section{Implementation}
 \subsection{Sagdeev pseudopotential root finding}
 We constructed a safe newton method {\tt NewtonSafe} to calculate the root of $S(\phi, M) = 0$
 for various Mach numbers. This method checks for convergance of the root finding process and
@@ -131,5 +185,7 @@ as it recursively approaches the 0 value.
 \end{figure}
 
 \section{numerical evolution of the pulses}
+
+\end{document}
 
 \end{document}
